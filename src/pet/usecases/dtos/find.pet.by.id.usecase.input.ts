@@ -1,7 +1,7 @@
 export default class FindPetByIdUseCaseInput {
-    id: string
+  id: string;
 
-    constructor(data: Partial<FindPetByIdUseCaseInput>) {
-        Object.assign(this, data)
-    }
+  constructor(data: Partial<FindPetByIdUseCaseInput>) {
+    Object.assign(this, data);
+  }
 }

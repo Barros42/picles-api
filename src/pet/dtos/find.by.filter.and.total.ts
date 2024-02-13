@@ -1,10 +1,10 @@
-import { Pet } from "../schemas/pet.schema";
+import { Pet } from '../schemas/pet.schema';
 
 export default class FindByFilterAndTotal {
-    items: Pet[]
-    total: number
+  items: Pet[];
+  total: number;
 
-    constructor(data: Partial<FindByFilterAndTotal>) {
-        Object.assign(this, data)
-    }
+  constructor(data: Partial<FindByFilterAndTotal>) {
+    Object.assign(this, data);
+  }
 }

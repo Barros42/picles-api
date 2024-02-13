@@ -1,3 +1,1 @@
-export default class GetSheltherDetailsUseCaseInput {
-    
-}
+export default class GetSheltherDetailsUseCaseInput {}

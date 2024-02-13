@@ -1,7 +1,7 @@
 export default class DeletePetByIdUseCaseOutput {
-    deleted: boolean
+  deleted: boolean;
 
-    constructor(data: Partial<DeletePetByIdUseCaseOutput>) {
-        Object.assign(this, data)
-    }
+  constructor(data: Partial<DeletePetByIdUseCaseOutput>) {
+    Object.assign(this, data);
+  }
 }

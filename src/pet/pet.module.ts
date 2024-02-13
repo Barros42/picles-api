@@ -14,36 +14,40 @@ import FileService from 'src/file.service';
 
 @Module({
   controllers: [PetController],
-  imports: [
-    MongooseModule.forFeature([{ name: Pet.name, schema: PetSchema }])
-  ],
+  imports: [MongooseModule.forFeature([{ name: Pet.name, schema: PetSchema }])],
   providers: [
     {
       provide: PetTokens.createPetUseCase,
-      useClass: CreatePetUseCase
+      useClass: CreatePetUseCase,
     },
     {
       provide: PetTokens.findPetByIdUseCase,
-      useClass: FindPetByIdUseCase
+      useClass: FindPetByIdUseCase,
     },
     {
       provide: PetTokens.updatePetByIdUseCase,
-      useClass: UpdatePetByIdUseCase
+      useClass: UpdatePetByIdUseCase,
     },
     {
       provide: PetTokens.deletePetByIdUseCase,
-      useClass: DeletePetByIdUseCase
+      useClass: DeletePetByIdUseCase,
     },
     {
       provide: PetTokens.findPetUseCase,
-      useClass: FindPetUseCase
+      useClass: FindPetUseCase,
     },
     {
       provide: PetTokens.updatePetPhotoByIdUseCase,
-      useClass: UpdatePetPhotoByIdUseCase
+      useClass: UpdatePetPhotoByIdUseCase,
     },
-    PetRepository,
-    FileService
-  ]
+    {
+      provide: PetTokens.petRepository,
+      useClass: PetRepository,
+    },
+    {
+      provide: PetTokens.fileService,
+      useClass: FileService,
+    },
+  ],
 })
 export class PetModule {}

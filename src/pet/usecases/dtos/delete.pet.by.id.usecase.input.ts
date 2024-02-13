@@ -1,7 +1,7 @@
 export default class DeletePetByIdUseCaseInput {
-    id: string
+  id: string;
 
-    constructor(data: Partial<DeletePetByIdUseCaseInput>) {
-        Object.assign(this, data)
-    }
+  constructor(data: Partial<DeletePetByIdUseCaseInput>) {
+    Object.assign(this, data);
+  }
 }

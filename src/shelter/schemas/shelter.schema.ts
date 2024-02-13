@@ -4,7 +4,7 @@ import { HydratedDocument } from 'mongoose';
 export type ShelterDocument = HydratedDocument<Shelter>;
 
 @Schema({
-  versionKey: false
+  versionKey: false,
 })
 export class Shelter {
   @Prop({ required: true })
@@ -20,10 +20,10 @@ export class Shelter {
   phone: string;
 
   @Prop({ required: true })
-  createdAt: Date
+  createdAt: Date;
 
   @Prop({ required: true })
-  updateAt: Date
+  updateAt: Date;
 }
 
 export const ShelterSchema = SchemaFactory.createForClass(Shelter);
