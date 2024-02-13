@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpStatus, Inject, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpStatus, Inject, Param, Post, Put, Query } from '@nestjs/common';
 import CreatePetControllerInput from './dtos/create.pet.controller.input';
 import CreatePetUseCaseOutput from './usecases/dtos/create.pet.usecase.output';
 import CreatePetUseCaseInput from './usecases/dtos/create.pet.usecase.input';
@@ -11,6 +11,8 @@ import UpdatePetByIdUseCaseOutput from './usecases/dtos/update.pet.usecase.outpu
 import UpdatePetByIdUseCaseInput from './usecases/dtos/update.pet.by.id.usecase.input';
 import DeletePetByIdUseCaseInput from './usecases/dtos/delete.pet.by.id.usecase.input';
 import DeletePetByIdUseCaseOutput from './usecases/dtos/delete.pet.by.id.usecase.output';
+import FindPetUseCaseInput from './usecases/dtos/find.pet.usecase.input';
+import FindPetUseCaseOutput from './usecases/dtos/find.pet.usecase.output';
 
 @Controller('pet')
 export class PetController {
@@ -27,9 +29,39 @@ export class PetController {
 
         @Inject(PetTokens.deletePetByIdUseCase)
         private readonly deletePetByIdUseCase: IUseCase<DeletePetByIdUseCaseInput, DeletePetByIdUseCaseOutput>,
+
+        @Inject(PetTokens.findPetUseCase)
+        private readonly findPetUseCase: IUseCase<FindPetUseCaseInput, FindPetUseCaseOutput>,
     ) {}
 
-    @Get('/:id')
+    @Get()
+    async getPets(
+        @Query('type') type?: string,
+        @Query('size') size?: string,
+        @Query('gender') gender?: string,
+        @Query('page') page?: string,
+        @Query('itemsPerPage') itemsPerPage?: string,
+    ): Promise<FindPetUseCaseOutput> {
+       try {
+        const FIRST_PAGE = 1
+        const DEFAULT_items_PER_PAGE = 10
+        const useCaseInput = new FindPetUseCaseInput({
+            type: !!type ? type : null,
+            size: !!size ? size : null,
+            gender: !!gender ? gender : null,
+            page: !!page ? parseInt(page) : FIRST_PAGE,
+            itemsPerPage: !!itemsPerPage ? parseInt(itemsPerPage) : DEFAULT_items_PER_PAGE
+        })
+        return await this.findPetUseCase.run(useCaseInput)
+       } catch (e) {
+        console.log(e)
+        throw new BadRequestException(
+            JSON.parse(e.message)
+        )
+       }
+    }
+
+    @Get(':id')
     async getPetById(@Param('id') petId: string): Promise<FindPetByIdUseCaseOutput> {
        try {
         const useCaseInput = new FindPetByIdUseCaseInput({ id: petId })
