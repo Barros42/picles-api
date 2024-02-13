@@ -9,6 +9,8 @@ import FindPetByIdUseCase from './usecases/find.pet.by.id.usecase';
 import UpdatePetByIdUseCase from './usecases/update.pet.by.id.usecase';
 import DeletePetByIdUseCase from './usecases/delete.pet.by.id.usecase';
 import FindPetUseCase from './usecases/find.pet.usecase';
+import UpdatePetPhotoByIdUseCase from './usecases/update.pet.photo.by.id.usecase';
+import FileService from 'src/file.service';
 
 @Module({
   controllers: [PetController],
@@ -36,7 +38,12 @@ import FindPetUseCase from './usecases/find.pet.usecase';
       provide: PetTokens.findPetUseCase,
       useClass: FindPetUseCase
     },
-    PetRepository
+    {
+      provide: PetTokens.updatePetPhotoByIdUseCase,
+      useClass: UpdatePetPhotoByIdUseCase
+    },
+    PetRepository,
+    FileService
   ]
 })
 export class PetModule {}
