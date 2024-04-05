@@ -41,20 +41,23 @@ export class PetRepository implements IPetRepository {
     await this.petModel.deleteOne({ _id: petId });
   }
 
-  async findByFilter(input: FindPetUseCaseInput): Promise<FindByFilterAndTotal> {
+  async findByFilter(
+    input: FindPetUseCaseInput,
+  ): Promise<FindByFilterAndTotal> {
     const FIRST_PAGE = 1;
-    const skip = input.page == FIRST_PAGE ? 0 : input.itemsPerPage * (input.page - 1);
+    const skip =
+      input.page == FIRST_PAGE ? 0 : input.itemsPerPage * (input.page - 1);
 
     let query = this.petModel.find();
 
     if (input.type) {
       query = query.find({ type: input.type });
     }
-  
+
     if (input.size) {
       query = query.find({ size: input.size });
     }
-  
+
     if (input.gender) {
       query = query.find({ gender: input.gender });
     }
@@ -64,7 +67,7 @@ export class PetRepository implements IPetRepository {
 
     const [items, total] = await Promise.all([
       skipQuery.exec(),
-      totalQuery.exec()
+      totalQuery.exec(),
     ]);
 
     return new FindByFilterAndTotal({ items, total });

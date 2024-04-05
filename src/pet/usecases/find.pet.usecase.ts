@@ -19,18 +19,17 @@ export default class FindPetUseCase
   ) {}
 
   async run(input: FindPetUseCaseInput): Promise<FindPetUseCaseOutput> {
-
     const queryResponse = await this.petRepository.findByFilter(input);
 
     const petResponseList: PetResponse[] = [];
 
     for (const currentPet of queryResponse.items) {
-        if (currentPet.photo) {
-            const photoInBase64 = await this.fileService.readFile(currentPet.photo);
-            currentPet.photo = photoInBase64.toString('base64');
-        }
+      if (currentPet.photo) {
+        const photoInBase64 = await this.fileService.readFile(currentPet.photo);
+        currentPet.photo = photoInBase64.toString('base64');
+      }
 
-        petResponseList.push(PetResponse.fromPet(currentPet));
+      petResponseList.push(PetResponse.fromPet(currentPet));
     }
 
     const totalPages = Math.ceil(queryResponse.total / input.itemsPerPage);
