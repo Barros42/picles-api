@@ -4,6 +4,7 @@ import { Pet } from './schemas/pet.schema';
 import { Model } from 'mongoose';
 import FindByFilterAndTotal from './dtos/find.by.filter.and.total';
 import IPetRepository from './interfaces/pet.repository.interface';
+import FindPetUseCaseInput from './usecases/dtos/find.pet.usecase.input';
 
 @Injectable()
 export class PetRepository implements IPetRepository {
@@ -40,36 +41,32 @@ export class PetRepository implements IPetRepository {
     await this.petModel.deleteOne({ _id: petId });
   }
 
-  async findByFilter(
-    page: number,
-    itemsPerPage: number,
-    type?: string,
-    size?: string,
-    gender?: string,
-  ): Promise<FindByFilterAndTotal> {
+  async findByFilter(input: FindPetUseCaseInput): Promise<FindByFilterAndTotal> {
     const FIRST_PAGE = 1;
-    const skip = page == FIRST_PAGE ? 0 : itemsPerPage * (page - 1);
+    const skip = input.page == FIRST_PAGE ? 0 : input.itemsPerPage * (input.page - 1);
 
     let query = this.petModel.find();
 
-    if (!!type) {
-      query = query.find({ type });
+    if (input.type) {
+      query = query.find({ type: input.type });
     }
-
-    if (!!size) {
-      query = query.find({ size });
+  
+    if (input.size) {
+      query = query.find({ size: input.size });
     }
-
-    if (!!gender) {
-      query = query.find({ gender });
+  
+    if (input.gender) {
+      query = query.find({ gender: input.gender });
     }
 
     const totalQuery = query.clone().countDocuments();
-    const skipQuery = query.clone().skip(skip).limit(itemsPerPage);
+    const skipQuery = query.clone().skip(skip).limit(input.itemsPerPage);
 
-    return new FindByFilterAndTotal({
-      items: await skipQuery.exec(),
-      total: await totalQuery.exec(),
-    });
+    const [items, total] = await Promise.all([
+      skipQuery.exec(),
+      totalQuery.exec()
+    ]);
+
+    return new FindByFilterAndTotal({ items, total });
   }
 }

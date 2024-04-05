@@ -5,17 +5,23 @@ import { PetModule } from './pet/pet.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../public'),
       serveRoot: '/public/',
     }),
     MulterModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://mdbf42:teste123@piclescluster.1noagfe.mongodb.net/picles?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get<string>('DB_CONNECTION_STRING')
+      })
+    }),
     ShelterModule,
     PetModule,
   ],

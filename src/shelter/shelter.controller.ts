@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Put } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Patch, Put } from '@nestjs/common';
 import { IUseCase } from 'src/domain/interfaces/usecase/IUsecase.interface';
 import UpdateShelterDetailsControllerInput from './dtos/update.shelter.details.controller.input';
 import GetSheltherDetailsUseCaseOutput from 'src/shelter/usecases/dtos/get.shelter.details.usecase.output';
@@ -27,7 +27,7 @@ export class ShelterController {
     return await this.getShelterDetailsUseCase.run(null);
   }
 
-  @Put()
+  @Patch()
   async updateShelterDetails(
     @Body() input: UpdateShelterDetailsControllerInput,
   ): Promise<UpdateSheltherDetailsUseCaseOutput> {
